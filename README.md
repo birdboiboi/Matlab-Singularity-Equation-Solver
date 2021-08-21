@@ -1,15 +1,6 @@
 # Matlab-Singularity-Equation-Solver
-A very basic singularity solver for 2d beam equationsfor problems like these
+A very basic singularity solver for 2d beam equations
 
-%Sample simpply support beam single load and moment
-%
-%   /\ Ray                                  ||        /\ Rby
-%   ||                                      ||F = 10  ||
-%   ||                                      ||        ||
-%   /o\-------------------------------------\/--------/o\
-%  /   \                                             /   \                               
-% --------                                          OOOOOOO
-%    |--------------2m ----------------------|--.25m---|
 
 
 
