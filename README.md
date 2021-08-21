@@ -3,8 +3,7 @@
 A very basic singularity solver for 2d beam equations<br>
 *Make sure matlab has the whole directory when running, any new script relies of Singularity_Term and Singularity_Equation*<br>
 Equations are made of terms where each turn is turned on and off appropriately<br>
-   %Sample simpply support beam single load and moment
-%<br>
+<br>
 </p>
 
  
@@ -50,7 +49,7 @@ Equations are made of terms where each turn is turned on and off appropriately<b
         <li>sheer_at_x</li>
         <li>slope_at_x</li>
       </ol>
-    <li>methods<li>
+    <li>methods</li>
       <ol>
         <li>read_type(self) </li>   
         <li>set_custom(self,F,dist,power) </li>
