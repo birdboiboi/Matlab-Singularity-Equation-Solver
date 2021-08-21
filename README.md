@@ -22,7 +22,7 @@ Equations are made of terms where each turn is turned on and off appropriately<b
       <li>sums</li>
       <li>at_x</li>
       </ol>
-   methods  </li>
+   <li>methods  </li>
       <ol>
       <li>add_term(self,term)</li>
       <li>set_boundry(seat_dist_x,value,stringPick)</li>
