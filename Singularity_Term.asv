@@ -27,49 +27,47 @@ classdef Singularity_Term < handle
         end
         
         function self = set_custom(self,F,dist,power)
-            syms x;
-            self.moment =  (1/factorial(power))*F * (x - dist).^(power);
+            syms X;
+            self.moment =  (1/factorial(power))*F * (X - dist).^(power);
             
             self.dist = dist;
-            outs = self.integrate_eqn(self.moment,x,2);
+            outs = self.integrate_eqn(self.moment,X,2);
             self.slope = outs(1);
             self.displace = outs(2);
             self.sheer = self.get_sheer();
         end
         function self = set_moment(self,F,dist)
-            syms x;
-            self.moment =  F * (x - dist).^(0);
+            syms X;
+            self.moment =  F * (X - dist).^(0);
             self.dist = dist;
-            outs = self.integrate_eqn(self.moment,x,2);
+            outs = self.integrate_eqn(self.moment,X,2);
             self.slope = outs(1);
             self.displace = outs(2);
             self.sheer = self.get_sheer();
         end
         function self = set_force(self,F,dist)
-            syms x;
-            self.moment =  F * (x - dist).^(1);
+            syms X;
+            self.moment =  F * (X - dist).^(1);
             self.dist = dist;
-            outs = self.integrate_eqn(self.moment,x,2);
+            outs = self.integrate_eqn(self.moment,X,2);
             self.slope = outs(1);
             self.displace = outs(2);
             self.sheer = self.get_sheer();
         end
-        
-        function set_rect_force(self,F,dist)
-            syms x;
-            self.moment =  F/2 * (x - dist).^(2);
+        function set_rect_weight(self,F,dist)
+            syms X;
+            self.moment =  F/2 * (X - dist).^(2);
             self.dist = dist;
-            outs = self.integrate_eqn(self.moment,x,2);
+            outs = self.integrate_eqn(self.moment,X,2);
             self.slope = outs(1);
             self.displace = outs(2);
             self.sheer = self.get_sheer();
         end
-        
-        function set_tri_force(F,dist)
-            syms x;
-            self.moment =  F/6 * (x - dist).^(3);
+        function set_tri_weight(F,dist)
+            syms X;
+            self.moment =  F/6 * (X - dist).^(3);
             self.dist = dist;
-            outs = self.integrate_eqn(self.moment,x,2);
+            outs = self.integrate_eqn(self.moment,X,2);
             self.slope = outs(1);
             self.displace = outs(2);
             self.sheer = self.get_sheer();
@@ -85,16 +83,17 @@ classdef Singularity_Term < handle
         end
         
         function self =  solve_at_x(self, dist_request)
-        syms x;
-        % if dist = 1 and request = 0 return 0 bc (x-1) == (dist_request -
+        syms X
+        % if dist = 1 and request = 0 return 0 bc (X-1) == (dist_request -
         % dist)
         self.dist_x = dist_request;
-        
+        self.dist_x
+        self.dist
         if self.dist < self.dist_x
-           self.sheer_at_x = subs(self.sheer,x,dist_request);
-           self.moment_at_x = subs(self.moment,x,dist_request);
-           self.slope_at_x = subs(self.slope,x,dist_request);
-           self.displace_at_x = subs(self.displace,x,dist_request);        
+           self.sheer_at_x = subs(self.sheer,X,dist_request);
+           self.moment_at_x = subs(self.moment,X,dist_request);
+           self.slope_at_x = subs(self.slope,X,dist_request);
+           self.displace_at_x = subs(self.displace,X,dist_request);        
         else
             self.sheer_at_x = 0;
             self.moment_at_x = 0;
@@ -107,41 +106,32 @@ classdef Singularity_Term < handle
         
         function out = disp(self)
             
-           syms Slope_ Shear_ Moment_ Displace_ Slope_at_x Shear_at_x Moment_at_x Displace_at_x;
+           syms Slope_ Shear_ Moment_ Displace_ Slope_at_X Shear_at_X Moment_at_X Displace_at_X;
            disp("singularity term");
            disp("----------");
-           disp("@x = " + convertCharsToStrings(char(self.dist_x)));
+           disp("@X = " + char(self.dist_x));
            
            
 
             A1 = ["Shear = "; "Moment = ";"Slope = "; "Displace = "] + self.array_form();
-            A2 = [ "    Shear_at_x = "; "    Moment_at_x = " ;"    Slope_at_x = ";"    Displace_at_x = "] + self.array_form_at_x();
-            fprintf('[%s]\n', [A1+  A2] )
+            A2 = [ "    Shear_at_X = "; "    Moment_at_X = " ;"    Slope_at_X = ";"    Displace_at_X = "] + self.array_form_at_x()';
+            fprintf('[%s]\n', A1 )
             
            
   
         end   
  
         function out= array_form(self)
-            out = [convertCharsToStrings(char(self.sheer));
-                convertCharsToStrings(char(self.moment));
-                convertCharsToStrings(char(self.slope));
-                convertCharsToStrings(char(self.displace))];
-            
-            if out == ["";"";"";""]
-               out = ["0";"0";"0";"0"];
+            out = [num2str(self.sheer);num2str(self.moment);num2str(self.slope);num2str(self.displace)];
+            if isempty(out)
+               out = [0;0;0;0];
             end
         end
         
         function out= array_form_at_x(self)
-            
-            out = [convertCharsToStrings(char(self.sheer_at_x));
-                convertCharsToStrings(char(self.moment_at_x));
-                convertCharsToStrings(char(self.slope_at_x));
-                convertCharsToStrings(char(self.displace_at_x))];
-            
-            if out == ["";"";"";""]
-               out = ["0";"0";"0";"0"];
+            out = [sprintf(self.sheer_at_x);char(self.moment_at_x);char(self.slope_at_x);char(self.displace_at_x)];
+        if isempty(out)
+               out = [0;0;0;0];
             end
         end
         
@@ -151,7 +141,6 @@ classdef Singularity_Term < handle
                 out = 0;
             end
         end
-        
         function returned = plus(A,B)
            returned = Singularity_Term();
            returned.sheer = A.sheer + B.sheer;
@@ -183,7 +172,7 @@ classdef Singularity_Term < handle
         end
         
         function returned = eq(A,B)
-           returned = Singularity_Term();
+           returned = Singularity_Term()
            returned.sheer = A.sheer == B.sheer;
            returned.moment = A.moment == B.moment;
            returned.slope = A.slope == B.slope;

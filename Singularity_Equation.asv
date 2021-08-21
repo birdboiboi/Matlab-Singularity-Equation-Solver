@@ -54,31 +54,30 @@ classdef Singularity_Equation< handle
                case 2
                    accuracy = 0.0125
            end
-            x = [accuracy:accuracy:length];
-            total_range = self.sum_all_at_x(0)
+x = [accuracy:accuracy:le];
+total_range = self.sum_all_at_x(0)
 
-            for i = x;
-                total_range = [total_range,self.sum_all_at_x(i)];
-            end;
+for i = x
+    total_range = [total_range,self.sum_all_at_x(i)];
+end
 
-            x = [0:accuracy:length];
-            total_range;
-            total_range= double(total_range);
+x = [0:accuracy:length];
+total_range= double(total_range);
 
-            figure()
-            subplot(2,2,1)
-            plot(x,total_range(1,:))
-            title("sheer")
-            subplot(2,2,2)
-            plot(x,total_range(2,:))
-            title("moment")
-            subplot(2,2,3)
-            plot(x,total_range(3,:))
-            title("slope")
-            subplot(2,2,4)
-            plot(x,total_range(4,:))
-            title("displace")
-            out = total_range
+figure()
+subplot(2,2,1)
+plot(x,total_range(1,:))
+title("sheer")
+subplot(2,2,2)
+plot(x,total_range(2,:))
+title("moment")
+subplot(2,2,3)
+plot(x,total_range(3,:))
+title("slope")
+subplot(2,2,4)
+plot(x,total_range(4,:))
+title("displace")
+ out = total_range
         end
         
         function out = disp_at_x(self)
