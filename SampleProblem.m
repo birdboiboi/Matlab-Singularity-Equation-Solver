@@ -49,15 +49,19 @@ full_equation.I = 1.2 * 10 ^-6
 %see total
 disp(full_equation)
 %solve get total at x
-full_equation.sum_all_at_x(0)
-full_equation.sum_all_at_x(1)
+eqn1 = full_equation.sum_all_at_x(0) == 0
+eqn2 = full_equation.sum_all_at_x(2.25) == 0
 %%
 %solve constants
 
-full_equation.add_boundry(3,0,"displacement")
-%full_equation.add_boundry(0,0,"displacement")
-
+full_equation.add_boundry(0,0,"displacement")
+full_equation.add_boundry(2.25,0,"displacement")
+%%
 full_equation.solve_constants()
+full_equation
+%%
+full_equation.C1 
+full_equation.C2 
 %%
 %plot
 full_equation.plot_all(2.25);

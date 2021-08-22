@@ -36,17 +36,29 @@ force.set_force(-F,2);
 reaction_B = Singularity_Term();
 reaction_B.set_force(Rby,2.25);
 
+
+
 %%
 %singularity equation
 full_equation = Singularity_Equation();
 full_equation.add_term([reaction_A,force,reaction_B]);
 
+%full_equation.E = 2000000
+%full_equation.I = 1.2 * 10 ^-6
 %%
-%solve get total at 0
-disp(full_equation.sum_all_at_x(0))
-disp(full_equation.sum_all_at_x(1))
+%see total
+disp(full_equation)
+%solve get total at x
+full_equation.sum_all_at_x(0)
+full_equation.sum_all_at_x(1)
+%%
+%solve constants
 
+full_equation.add_boundry(3,0,"displacement")
+full_equation.add_boundry(0,0,"displacement")
+
+full_equation.solve_constants()
+full_equation.
 %%
 %plot
-
-full_equation.plot_all()
+full_equation.plot_all(2.25);

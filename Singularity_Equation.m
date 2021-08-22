@@ -52,7 +52,8 @@ classdef Singularity_Equation< handle
                 total = total + self.term_list(i);
             end
            self.disp_at_x();
-           fprintf("total value %s",total);
+           %fprintf("total value %s",total);
+           disp(total)
            syms x
            out = [total.sheer ;total.moment;total.slope + self.C1;total.displace+self.C1*x + self.C2];
        end
@@ -70,35 +71,26 @@ classdef Singularity_Equation< handle
          end
        
          
-        function out = disp(self)
-           disp("singularity equation");
-           disp("----------");
-            A1 = ["Shear = "; "Moment = ";"Slope = "; "Displace = "];           
-            for i = 1:length(self.term_list)
-                A1 = A1 + ["+(";"+(";"+(";"+("] + self.term_list(i).array_form() + [")";")";")";")"];
-            end
-            %+C1*X + C2 == EI*y
-            %C1 == EI*theta
-            fprintf('[%s]\n', A1 )
-        end   
+         
        
         function out = solve_constants(self)
-               eqns = []
+               syms x
+              
                %need to vectorize for better performance
                for i = 1: size(self.boundry_list,1)
                    %self.list_boundries(1) = x value
                    %self.list_boundries(2) = final value
                    %self.list_boundries(3) =(sheer = 1,moment = 2,slope =3,
                    %displace = 4)
-                   disp(i)
-                   eqn = self.sum_all_at_x(self.boundry_list(i,1)) == self.boundry_list(i,2);
-                   eqns(i) = eqn(self.boundry_list(i,3));
-                   
-                   
+                   disp(self.sum_all_at_x(self.boundry_list(i,1)))
+                   eqn = self.sum_all_at_x(self.boundry_list(i,1)) == self.boundry_list(i,2)
+                   eqns(i) = eqn(self.boundry_list(i,3))
                end
                
-               self.C1 = solve(eqns,self.C1)
-               self.C2 = solve(eqns,self.C2)
+               
+               syms C1 C2
+               [self.C1,self.C2] = solve(eqns,C1,C2)
+            
                              
         end
         
@@ -134,6 +126,23 @@ classdef Singularity_Equation< handle
             title("displace")
             out = total_range
         end
+        
+        function out = disp(self)
+           disp("singularity equation");
+           disp("----------");
+            A1 = ["Shear = "; "Moment = ";"Slope = "; "Displace = "];           
+            for i = 1:length(self.term_list)
+                A1 = A1 + ["+(";"+(";"+(";"+("] + self.term_list(i).array_form() + [")";")";")";")"];
+            end
+            %+C1*X + C2 == EI*y
+            %C1 == EI*theta
+            A1;
+            A1= A1 + [" == 0";" ==0 ";
+                "+"+convertCharsToStrings(char(self.C1))+" == " + convertCharsToStrings(char(self.E))+convertCharsToStrings(char(self.I))+"* dy/dx";
+               "+"+convertCharsToStrings(char(self.C1))+"*x+"+convertCharsToStrings(char(self.C2))+" == " + convertCharsToStrings(char(self.E))+convertCharsToStrings(char(self.I))+" dy/dx"];
+            %"+" + convertCharsToStrings(char(self.C1))+"*x + "+"==" + convertCharsToStrings(char(self.E))+convertCharsToStrings(char(self.I))+" y"
+            fprintf('[%s]\n', A1 )
+        end  
         
         function out = disp_at_x(self)
            disp("singularity equation");
