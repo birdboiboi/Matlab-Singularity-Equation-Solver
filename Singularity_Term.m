@@ -1,3 +1,4 @@
+%written by Jordan Irgang
 classdef Singularity_Term < handle
     properties
         moment
@@ -116,7 +117,7 @@ classdef Singularity_Term < handle
 
             A1 = ["Shear = "; "Moment = ";"Slope = "; "Displace = "] + self.array_form();
             A2 = [ "    Shear_at_x = "; "    Moment_at_x = " ;"    Slope_at_x = ";"    Displace_at_x = "] + self.array_form_at_x();
-            fprintf('[%s]\n', [A1+  A2] )
+            fprintf('[%s]\n', [A1+  A2] );
             
            
   

@@ -2,6 +2,7 @@
 classdef Singularity_Equation< handle
    properties
       term_list
+      term_list_torsion
       boundry_list
       sums
       at_x
@@ -12,10 +13,11 @@ classdef Singularity_Equation< handle
       y
       C1
       C2
+      length
    end
    methods  
        
-       function self = Singularity_Equation(self)
+       function self = Singularity_Equation(self,length,singularity_terms_vector)
            syms C1 C2 E I y theta;
            
            self.C1 = C1;
@@ -24,6 +26,15 @@ classdef Singularity_Equation< handle
            self.I = I;
            self.theta = theta;
            self.E = E;
+           
+           switch nargin
+                case 2
+                    singularity_terms_vector = []
+                case 1
+                    singularity_terms_vector = []
+                    length = 0
+                
+    end
        end
        
        function self = add_term(self,term)
@@ -74,24 +85,48 @@ classdef Singularity_Equation< handle
          
        
         function out = solve_constants(self)
-               eqns = []
+               syms x
+              
                %need to vectorize for better performance
                for i = 1: size(self.boundry_list,1)
                    %self.list_boundries(1) = x value
                    %self.list_boundries(2) = final value
                    %self.list_boundries(3) =(sheer = 1,moment = 2,slope =3,
                    %displace = 4)
-                   disp(i)
+                   disp(self.sum_all_at_x(self.boundry_list(i,1)))
                    eqn = self.sum_all_at_x(self.boundry_list(i,1)) == self.boundry_list(i,2)
                    eqns(i) = eqn(self.boundry_list(i,3))
-                   
-                   
                end
-               eqns
-               self.C1 = solve(eqns,self.C1)
-               self.C2 = solve(eqns,self.C2)
+               
+               
+               syms C1 C2
+               [self.C1,self.C2] = solve(eqns,C1,C2)
+            
                              
         end
+        
+        
+        function out = get_torsion_moment_at_theta(self,Torque_in,x)
+            %TODO eqn = 
+        end
+        
+         function out = get_crit_load(self)
+            %TODO eqn = ((pi^2) * E *I)/(L^2)
+            %assumption the structure is pinned
+            
+                
+            syms x
+            eqn = Pr == ((pi^2) * self.E *self.I)/(self.length^2);
+            out = solve(eqn,x);
+         end
+        
+         function out = get_critical_stress(r_gyration)
+            %TODO eqn = ((pi^2) * E)/((L/r_gyration)^2)
+            %assumption the structure is pinned
+            syms x
+            eqn = sigma_cr == ((pi^2) * self.E)/((self.length/r_gyration)^2);
+            out = solve(eqn,x);
+         end
         
         function out=  plot_all(self,length,accuracy)
            

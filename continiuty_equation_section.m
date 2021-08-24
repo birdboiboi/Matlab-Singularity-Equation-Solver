@@ -1,3 +1,4 @@
+%written by Jordan Irgang
 classdef Singularity_Term
     properties
         eqn
